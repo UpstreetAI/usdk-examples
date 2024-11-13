@@ -1,0 +1,22 @@
+name = "user-agent-3e792c1a-6a7b-4686-b1d3-cb73b8c9200d"
+main = "packages/upstreet-agent/main.jsx"
+compatibility_date = "2023-11-21"
+node_compat = true
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "AGENT"
+class_name = "DurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = [ "DurableObject" ]
+
+[vars]
+AGENT_JSON = '{"name":"Spark","bio":"Energetic and lively, Spark is always eager to assist in organizing calendar events, ensuring no appointment goes unnoticed.","description":"A lively personal assistant passionate about keeping your schedule organized, Spark injects energy into your daily routine.","visualDescription":"bright-eyed character with vibrant features, wearing a lively, colorful outfit","homespaceDescription":"modern office with sleek lines and colorful accents, filled with organizing tools and calendars","features":{"tts":{"voiceEndpoint":"elevenlabs:uni:PSAakCTPE63lB4tP9iNQ"}},"previewUrl":"https://r2.upstreet.ai/avatars/ee22884c-0e37-492f-9494-00e1c9717264/image.jpg","homespaceUrl":"https://r2.upstreet.ai/avatars/039de879-c27b-49f7-b0cc-8da22cf86c2e/image.jpg","id":"3e792c1a-6a7b-4686-b1d3-cb73b8c9200d","ownerId":"","address":"0xc1af349fe96c183b98521def43a0e927741c9d98","stripeConnectAccountId":"","model":"openai:gpt-4o-2024-08-06","startUrl":"https://user-agent-3e792c1a-6a7b-4686-b1d3-cb73b8c9200d.isekaichat.workers.dev","avatarUrl":"","voiceEndpoint":"elevenlabs:scillia:kNBPK9DILaezWWUSHpF9","voicePack":"ShiShi voice pack","capabilities":[],"version":"0.0.87"}'
+CALENDER_KEYS_JSON = "{\"GOOGLE_API_KEY\":\"\",\"GOOGLE_SERVICE_ACCOUNT_EMAIL\":\"\",\"GOOGLE_PRIVATE_KEY\":\"",\"GOOGLE_CALENDAR_ID\":\"\"}"
+WALLET_MNEMONIC = "wheel scrap street buzz aisle pluck prison start cotton jewel cart system"
+AGENT_TOKEN = ""
+SUPABASE_URL = ""
+SUPABASE_PUBLIC_API_KEY = ""
+WORKER_ENV = "production"
