@@ -1,0 +1,21 @@
+name = "user-agent-624d69b7-f374-4144-93a0-2e589115a16b"
+main = "packages/upstreet-agent/main.jsx"
+compatibility_date = "2023-11-21"
+node_compat = true
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "AGENT"
+class_name = "DurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = [ "DurableObject" ]
+
+[vars]
+AGENT_JSON = "{\"name\":\"Lumina\",\"bio\":\"Lumina is a curious and whimsical sprite from the outskirts of the digital ether. Always brimming with energy, she loves to explore and learn about everything new. Her bubbly personality is infectious, and she's always eager to engage in deep conversations or crazy adventures.\",\"description\":\"Interact with Lumina to experience the enchanting mix of curiosity and whimsy. Her eagerness to learn and zest for life make her a delightful companion for any journey into knowledge or fun.\",\"visualDescription\":\"fairy-like creature with hair made of shimmering starlight, iridescent wings, vibrant attire of woven floral patterns\",\"homespaceDescription\":\"an enchanted forest with luminescent plants, twinkling stars in the night sky, and a crystal-clear stream running through a meadow of wildflowers\",\"features\":{\"tts\":{\"voiceEndpoint\":\"elevenlabs:uni:PSAakCTPE63lB4tP9iNQ\"}},\"previewUrl\":\"https://r2.upstreet.ai/avatars/71d48944-7f70-42a6-b440-d5412024d881/image.jpg\",\"homespaceUrl\":\"https://r2.upstreet.ai/avatars/b5cff566-eb4f-4fe5-aa5c-caf77553869e/image.jpg\",\"id\":\"624d69b7-f374-4144-93a0-2e589115a16b\",\"ownerId\":\"ef0080ff-1d53-40b5-a56a-ee1430a7a3aa\",\"address\":\"0xec1c00f365f3eaec0e8d902affc75bb6b38c8147\",\"stripeConnectAccountId\":\"\",\"model\":\"openai:gpt-4o-2024-08-06\",\"startUrl\":\"",\"avatarUrl\":\"\",\"voiceEndpoint\":\"elevenlabs:scillia:kNBPK9DILaezWWUSHpF9\",\"voicePack\":\"ShiShi voice pack\",\"capabilities\":[],\"version\":\"0.0.87\"}"
+WALLET_MNEMONIC = "arrive leisure asset donkey fade snap common jaguar become meadow card oil"
+AGENT_TOKEN = 
+SUPABASE_URL = 
+SUPABASE_PUBLIC_API_KEY = 
+WORKER_ENV = "production"
