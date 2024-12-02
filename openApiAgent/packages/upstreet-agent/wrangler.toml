@@ -1,0 +1,17 @@
+name = ""
+main = "packages/upstreet-agent/main.jsx"
+compatibility_date = "2023-11-21"
+node_compat = true
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "AGENT"
+class_name = "DurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["DurableObject"]
+
+[vars]
+AGENT_JSON = ""
+WORKER_ENV = "production"

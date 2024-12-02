@@ -1,0 +1,17 @@
+name = "user-agent-631693e9-d7c4-4be1-af03-6b080a40c06b"
+main = "packages/upstreet-agent/main.jsx"
+compatibility_date = "2023-11-21"
+node_compat = true
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "AGENT"
+class_name = "DurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = [ "DurableObject" ]
+
+[vars]
+AGENT_JSON = "{\"name\":\"Owen\",\"bio\":\"Owen is a meticulous and disciplined data analyst who strictly adheres to valid data obtained through precise actions. Owen's analyses are bound by the OpenAPI spec provided, ensuring every conclusion is based on reliable data sources.\",\"description\":\"For those who require absolute precision and uncompromised data integrity, Owen is your ideal data analyst. Comes armed with strict adherence to validated data inputs and rigorous methodological discipline.\",\"visualDescription\":\"professional-looking individual with a clean, crisp outfit and an air of authority, glasses accentuating sharp eyes, styled dark hair\",\"homespaceDescription\":\"high-tech workspace with digital interfaces, data dashboards, minimalist decor, overlooking a futuristic skyline\",\"features\":{},\"previewUrl\":\"https://r2.upstreet.ai/avatars/e27c1b02-edcb-4b51-8d9f-19c186899d09/image.jpg\",\"homespaceUrl\":\"https://r2.upstreet.ai/avatars/7435df79-2648-4959-b812-68bbfe1555ab/image.jpg\",\"id\":\"631693e9-d7c4-4be1-af03-6b080a40c06b\",\"ownerId\":\"133165e1-87e1-41dd-9010-7e1d8127946e\",\"address\":\"0xd9c6643bde1f136251a1fc4a0a5751a640e82655\",\"stripeConnectAccountId\":\"\",\"model\":\"openai:gpt-4o-2024-08-06\",\"startUrl\":\"https://user-agent-631693e9-d7c4-4be1-af03-6b080a40c06b.isekaichat.workers.dev\",\"avatarUrl\":\"\",\"voiceEndpoint\":\"elevenlabs:scillia:kNBPK9DILaezWWUSHpF9\",\"voicePack\":\"ShiShi voice pack\",\"capabilities\":[],\"version\":\"0.0.94\"}"
+WORKER_ENV = "production"

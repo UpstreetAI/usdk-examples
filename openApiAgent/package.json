@@ -1,0 +1,12 @@
+{
+  "name": "my-agent",
+  "scripts": {
+    "generate:api": "npx openapi-zod-client https://raw.githubusercontent.com/swagger-api/swagger-petstore/refs/heads/master/src/main/resources/openapi.yaml --additional-props-default-value false  -o ./api.ts"
+  },
+  "dependencies": {
+    "upstreet-agent": "file:./packages/upstreet-agent"
+  },
+  "devDependencies": {
+    "openapi-zod-client": "^1.18.2"
+  }
+}
