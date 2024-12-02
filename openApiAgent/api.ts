@@ -1,13 +1,67 @@
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
+const Category = z.object({ id: z.number().int(), name: z.string() }).partial();
+const Tag = z.object({ id: z.number().int(), name: z.string() }).partial();
+const Pet = z.object({
+  id: z.number().int().optional(),
+  name: z.string(),
+  category: Category.optional(),
+  photoUrls: z.array(z.string()),
+  tags: z.array(Tag).optional(),
+  status: z.enum(["available", "pending", "sold"]).optional(),
+});
+const ApiResponse = z
+  .object({ code: z.number().int(), type: z.string(), message: z.string() })
+  .partial();
+const Order = z
+  .object({
+    id: z.number().int(),
+    petId: z.number().int(),
+    quantity: z.number().int(),
+    shipDate: z.string().datetime({ offset: true }),
+    status: z.enum(["placed", "approved", "delivered"]),
+    complete: z.boolean(),
+  })
+  .partial();
+const User = z
+  .object({
+    id: z.number().int(),
+    username: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string(),
+    password: z.string(),
+    phone: z.string(),
+    userStatus: z.number().int(),
+  })
+  .partial();
+
+export const schemas = {
+  Category,
+  Tag,
+  Pet,
+  ApiResponse,
+  Order,
+  User,
+};
+
 const endpoints = makeApi([
   {
     method: "post",
     path: "/pet",
     alias: "addPet",
+    description: `Add a new pet to the store`,
     requestFormat: "json",
-    response: z.void(),
+    parameters: [
+      {
+        name: "body",
+        description: `Create a new pet in the store`,
+        type: "Body",
+        schema: Pet,
+      },
+    ],
+    response: Pet,
     errors: [
       {
         status: 405,
@@ -20,8 +74,17 @@ const endpoints = makeApi([
     method: "put",
     path: "/pet",
     alias: "updatePet",
+    description: `Update an existing pet by Id`,
     requestFormat: "json",
-    response: z.void(),
+    parameters: [
+      {
+        name: "body",
+        description: `Update an existent pet in the store`,
+        type: "Body",
+        schema: Pet,
+      },
+    ],
+    response: Pet,
     errors: [
       {
         status: 400,
@@ -50,10 +113,10 @@ const endpoints = makeApi([
       {
         name: "petId",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.number().int(),
       },
     ],
-    response: z.void(),
+    response: Pet,
     errors: [
       {
         status: 400,
@@ -76,7 +139,17 @@ const endpoints = makeApi([
       {
         name: "petId",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.number().int(),
+      },
+      {
+        name: "name",
+        type: "Query",
+        schema: z.string().optional(),
+      },
+      {
+        name: "status",
+        type: "Query",
+        schema: z.string().optional(),
       },
     ],
     response: z.void(),
@@ -97,24 +170,19 @@ const endpoints = makeApi([
       {
         name: "api_key",
         type: "Header",
-        schema: z.unknown().optional(),
+        schema: z.string().optional(),
       },
       {
         name: "petId",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.number().int(),
       },
     ],
     response: z.void(),
     errors: [
       {
         status: 400,
-        description: `Invalid ID supplied`,
-        schema: z.void(),
-      },
-      {
-        status: 404,
-        description: `Pet not found`,
+        description: `Invalid pet value`,
         schema: z.void(),
       },
     ],
@@ -123,15 +191,25 @@ const endpoints = makeApi([
     method: "post",
     path: "/pet/:petId/uploadImage",
     alias: "uploadFile",
-    requestFormat: "json",
+    requestFormat: "binary",
     parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.instanceof(File),
+      },
       {
         name: "petId",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.number().int(),
+      },
+      {
+        name: "additionalMetadata",
+        type: "Query",
+        schema: z.string().optional(),
       },
     ],
-    response: z.void(),
+    response: ApiResponse,
   },
   {
     method: "get",
@@ -143,10 +221,13 @@ const endpoints = makeApi([
       {
         name: "status",
         type: "Query",
-        schema: z.unknown(),
+        schema: z
+          .enum(["available", "pending", "sold"])
+          .optional()
+          .default("available"),
       },
     ],
-    response: z.void(),
+    response: z.array(Pet),
     errors: [
       {
         status: 400,
@@ -157,22 +238,52 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/pet/findByTags",
+    alias: "findPetsByTags",
+    description: `Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "tags",
+        type: "Query",
+        schema: z.array(z.string()).optional(),
+      },
+    ],
+    response: z.array(Pet),
+    errors: [
+      {
+        status: 400,
+        description: `Invalid tag value`,
+        schema: z.void(),
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/store/inventory",
     alias: "getInventory",
     description: `Returns a map of status codes to quantities`,
     requestFormat: "json",
-    response: z.void(),
+    response: z.record(z.number().int()),
   },
   {
     method: "post",
     path: "/store/order",
     alias: "placeOrder",
+    description: `Place a new order in the store`,
     requestFormat: "json",
-    response: z.void(),
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: Order,
+      },
+    ],
+    response: Order,
     errors: [
       {
-        status: 400,
-        description: `Invalid Order`,
+        status: 405,
+        description: `Invalid input`,
         schema: z.void(),
       },
     ],
@@ -181,16 +292,16 @@ const endpoints = makeApi([
     method: "get",
     path: "/store/order/:orderId",
     alias: "getOrderById",
-    description: `For valid response try integer IDs with value &gt;&#x3D; 1 and &lt;&#x3D; 10. Other values will generated exceptions`,
+    description: `For valid response try integer IDs with value &lt;&#x3D; 5 or &gt; 10. Other values will generate exceptions.`,
     requestFormat: "json",
     parameters: [
       {
         name: "orderId",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.number().int(),
       },
     ],
-    response: z.void(),
+    response: Order,
     errors: [
       {
         status: 400,
@@ -208,13 +319,13 @@ const endpoints = makeApi([
     method: "delete",
     path: "/store/order/:orderId",
     alias: "deleteOrder",
-    description: `For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors`,
+    description: `For valid response try integer IDs with value &lt; 1000. Anything above 1000 or nonintegers will generate API errors`,
     requestFormat: "json",
     parameters: [
       {
         name: "orderId",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.number().int(),
       },
     ],
     response: z.void(),
@@ -237,6 +348,14 @@ const endpoints = makeApi([
     alias: "createUser",
     description: `This can only be done by the logged in user.`,
     requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        description: `Created user object`,
+        type: "Body",
+        schema: User,
+      },
+    ],
     response: z.void(),
   },
   {
@@ -248,10 +367,10 @@ const endpoints = makeApi([
       {
         name: "username",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.string(),
       },
     ],
-    response: z.void(),
+    response: User,
     errors: [
       {
         status: 400,
@@ -273,24 +392,18 @@ const endpoints = makeApi([
     requestFormat: "json",
     parameters: [
       {
+        name: "body",
+        description: `Update an existent user in the store`,
+        type: "Body",
+        schema: User,
+      },
+      {
         name: "username",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.string(),
       },
     ],
     response: z.void(),
-    errors: [
-      {
-        status: 400,
-        description: `Invalid user supplied`,
-        schema: z.void(),
-      },
-      {
-        status: 404,
-        description: `User not found`,
-        schema: z.void(),
-      },
-    ],
   },
   {
     method: "delete",
@@ -302,7 +415,7 @@ const endpoints = makeApi([
       {
         name: "username",
         type: "Path",
-        schema: z.unknown(),
+        schema: z.string(),
       },
     ],
     response: z.void(),
@@ -321,17 +434,18 @@ const endpoints = makeApi([
   },
   {
     method: "post",
-    path: "/user/createWithArray",
-    alias: "createUsersWithArrayInput",
-    requestFormat: "json",
-    response: z.void(),
-  },
-  {
-    method: "post",
     path: "/user/createWithList",
     alias: "createUsersWithListInput",
+    description: `Creates list of users with given input array`,
     requestFormat: "json",
-    response: z.void(),
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.array(User),
+      },
+    ],
+    response: User,
   },
   {
     method: "get",
@@ -342,15 +456,15 @@ const endpoints = makeApi([
       {
         name: "username",
         type: "Query",
-        schema: z.unknown(),
+        schema: z.string().optional(),
       },
       {
         name: "password",
         type: "Query",
-        schema: z.unknown(),
+        schema: z.string().optional(),
       },
     ],
-    response: z.void(),
+    response: z.string(),
     errors: [
       {
         status: 400,
